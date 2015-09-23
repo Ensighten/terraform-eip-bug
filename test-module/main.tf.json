@@ -1,0 +1,29 @@
+{
+  "variable": {
+    "subnet": {},
+    "count": {}
+  },
+  "provider": {
+    "aws": {
+        "region": "us-east-1"
+    }
+  },
+  "resource": {
+   "aws_instance": {
+      "test-instance": {
+         "count": "${var.count}",
+         "ami": "ami-e0efab88",
+         "associate_public_ip_address": true,
+         "instance_type": "t2.micro",
+         "subnet_id": "${var.subnet}"
+       }
+    },
+    "aws_eip": {
+      "test-instance": {
+        "count": "${var.count}",
+        "instance": "${element(aws_instance.test-instance.*.id, count.index)}",
+        "vpc": true
+      }
+    }
+  }
+}
